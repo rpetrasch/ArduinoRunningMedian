@@ -1,0 +1,35 @@
+#######################################
+# Syntax Coloring Map For MinHeap
+#######################################
+
+#######################################
+# Class (KEYWORD1)
+#######################################
+
+RunningMedian KEYWORD1 RunningHeapLibrary
+Heap          KEYWORD1 RunningHeapLibrary
+HeapUtils     KEYWORD1 RunningHeapLibrary
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+# methods
+getMedian	KEYWORD2
+add	        KEYWORD2
+peek        KEYWORD2
+poll        KEYWORD2
+deleteLazy  KEYWORD2
+size        KEYWORD2
+ARRAY_SIZE  KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+HEAP_SIZE	LITERAL1
+INT_MIN     LITERAL1
+FLOAT_MIN	LITERAL1
+FLOAT_MAX	LITERAL1
+NOT_DEFINED LITERAL1
+
