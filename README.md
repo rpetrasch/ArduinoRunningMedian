@@ -1,8 +1,11 @@
-# Running / Sliding Median for Arduino 
+<img src="https://github.com/rpetrasch/ArduinoRunningMedian/blob/master/ArduinoRunningMedianLogo.png?raw=true" width="150"/> <h1>ArduinoRunningMedian</h1>
+<hr/>
+
+## A Running / Sliding Median Library for Arduino
 
 A simple heap and running median (min/max heaps) implementation that can be used on small development boards like Arduino UNO. 
 
-## Getting Started
+### Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
