@@ -1,4 +1,4 @@
-# Running / Sliding Median for Arduino
+# Running / Sliding Median for Arduino 
 
 A simple heap and running median (min/max heaps) implementation that can be used on small development boards like Arduino UNO. 
 
