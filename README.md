@@ -1,4 +1,4 @@
-<img src="https://github.com/rpetrasch/ArduinoRunningMedian/blob/master/ArduinoRunningMedianLogo.png?raw=true" width="150"/> <h1>ArduinoRunningMedian</h1>
+<h1><img src="https://github.com/rpetrasch/ArduinoRunningMedian/blob/master/ArduinoRunningMedianLogo.png?raw=true" width="150"/> ArduinoRunningMedian</h1>
 <hr/>
 
 ## A Running / Sliding Median Library for Arduino
