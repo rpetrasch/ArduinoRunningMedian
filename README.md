@@ -16,6 +16,20 @@ More info on C++17 ia available on [isocpp.org website](https://isocpp.org/std/t
 Compile, build, and run the main program (test)
 
 Use the zip file for the Arduino and check out the examples.
+- Download [Arduino zip file](https://github.com/rpetrasch/ArduinoRunningMedian/blob/master/ArduinoRunningMedian.zip)
+- Open your Arduino IDE: Sketch->Include Library-> Add .ZIP Library
+- Select the file ArduinoRunningMedian.zip
+- Open the simple example: File->Examples->ArduinoRunningMedian->simpleMedian
+- Upload the sketch on your target and open the serial monitor. You should see something like this:
+```
+--------------------------------
+Running Median - Test
+--------------------------------
+Element:    5 	 Median:    5
+Element:   15 	 Median:   10
+Element:    1 	 Median:    5
+...
+```
 
 More infos coming soon...
 
