@@ -97,13 +97,13 @@ void printMedian(int values[], int size, RunningMedian &runningMedian) {
 
 /**
  * Main test program
- *
+ * Contains 4 test cases for using the running median / sliding median
  */
 int main()
 {
     {
         cout << "---------------------------------------------------------------" << endl;
-        cout << "Test 1: heap size 2 / 6 elements" << endl;
+        cout << "Test 1: heap size 2 / 6 elements -> heap overflow" << endl;
         int values[] = {1, 2, 3, 4, 5, 6}; // 6 elements
         int size = ARRAY_SIZE(values);
         RunningMedian runningMedian(2); // 2 heaps -> capacity for 4 elements
@@ -115,7 +115,7 @@ int main()
 
     {
         cout << "---------------------------------------------------------------" << endl;
-        cout << "Test 2: heap size OK" << endl;
+        cout << "Test 2: heap size OK and 2 outliers" << endl;
         int values[] = {5, 15, 1, 3, 2, 8, 100, 7, 9, 10, 6, 11, 4, -88, 1};
         int size = ARRAY_SIZE(values);
         RunningMedian runningMedian(8);
@@ -138,18 +138,7 @@ int main()
     }
     {
         cout << "---------------------------------------------------------------" << endl;
-        cout << "Test 3: Duplicates" << endl;
-        int values[] = {1, 2, 3, 4}; // 4 elements
-        int size = ARRAY_SIZE(values);
-        RunningMedian runningMedian(8);
-        printMedian(values, size, runningMedian);
-        cout << "---" << endl;
-        printHeapPoll(runningMedian.getMaxHeap(), "Max heap");
-        printHeapPoll(runningMedian.getMinHeap(), "Min heap");
-    }
-    {
-        cout << "---------------------------------------------------------------" << endl;
-        cout << "Test 4: Ring Buffer" << endl;
+        cout << "Test 4: Ring Buffer -> update values" << endl;
         int values[] = {1, 4, 6, 8}; // 4 elements
         int size = ARRAY_SIZE(values);
         RunningMedian runningMedian(8);
