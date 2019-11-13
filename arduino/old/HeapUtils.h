@@ -18,7 +18,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "HeapUtils.h"
+#ifndef RUNNINGMEDIAN_HEAPUTILS_H
+#define RUNNINGMEDIAN_HEAPUTILS_H
 
 /**
  * Comparator for "greater than or equal to"
@@ -28,9 +29,7 @@
  * @param b second parameter
  * @return true (a>=b) or false (a<b)
  */
-bool greaterOrEqual(float a, float b) {
-    return a >= b;
-}
+bool greaterOrEqual(int a, int b);
 
 /**
  * Comparator for "less than or equal to"
@@ -40,9 +39,7 @@ bool greaterOrEqual(float a, float b) {
  * @param b second parameter
  * @return true (a<=b) or false (a>b)
  */
-bool lessOrEqual(float a, float b) {
-    return a <= b;
-}
+bool lessOrEqual(int a, int b);
 
 /**
  * Calculation of the mean (average) for 2 values
@@ -52,13 +49,11 @@ bool lessOrEqual(float a, float b) {
  * @param b first param
  * @return mean value of a and b
  */
-float mean(float a, float b) {
-    return ((float)a + (float)b) / 2;
-}
+float mean(int a, int b);
 
 /** Generalized signum function
  * used for comparision of the the sizes of min and max heap
- * = 0  if a == b  - same size = heaps are balanced
+ *  * = 0  if a == b  - same size = heaps are balanced
  * = -1 if a < b   - left contains less elements than right
  * = 1  if a > b   - left contains more elements than right
  *
@@ -66,11 +61,7 @@ float mean(float a, float b) {
  * @param right value
  * @return comparision result: 0, 1, or -1
  **/
-int signum(int left, int right) {
-    if( left == right )
-        return 0;
-    return left < right ? -1 : 1;
-}
+int signum(int a, int b);
 
 /** Swap a and b
  * changes the value of a with the value of b
@@ -78,10 +69,6 @@ int signum(int left, int right) {
  * @param a first param will get the value of b
  * @param b second param will get the value of a
  */
-void swap(float &a, float &b){
-    float tmp = a;
-    a = b;
-    b = tmp;
-}
+void swap(int &a, int &b);
 
-
+#endif //RUNNINGMEDIAN_HEAPUTILS_H

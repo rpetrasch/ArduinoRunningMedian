@@ -48,7 +48,6 @@ RunningMedian::RunningMedian(int array_size) :
 
 /**
   * Destructor
-  * ToDo implement
   */
 RunningMedian::~RunningMedian() {
 //    delete &minHeap;
@@ -128,7 +127,7 @@ float RunningMedian::getMedian() {
  * @param newElement new element to be added
  * @return true = done, false = failure
  */
-bool deleteAddBalance(Heap &heapDelete, Heap &heapAdd, float oldElement, float newElement) {
+bool deleteAddBalance(Heap &heapDelete, Heap &heapAdd, int oldElement, int newElement) {
     bool done = true;
     heapDelete.deleteLazy(oldElement); // lazily delete the old element
     heapAdd.add(newElement); // add new element to the heap
@@ -154,7 +153,7 @@ bool deleteAddBalance(Heap &heapDelete, Heap &heapAdd, float oldElement, float n
  * @param element that is to be removed
  * @return true (removed) or false (element not found)
  */
-bool RunningMedian::updateElement(int oldElement, float newElement) {
+bool RunningMedian::updateElement(int oldElement, int newElement) {
     bool updated = true;
     if (median > FLOAT_MIN) {
         if (oldElement < median) { // old element -> left (max) heap

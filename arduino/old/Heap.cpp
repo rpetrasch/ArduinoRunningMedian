@@ -36,6 +36,14 @@
 #include "HeapUtils.h"
 #include "StringUtils.h"
 
+// Utility functions for the Heap
+int left(int index) {
+    return 2 * index + 1;
+}
+
+int right(int index) {
+    return 2 * (index + 1);
+}
 
 /**
  * Constructor
@@ -44,13 +52,10 @@
  * @param heapArraySize size of the array that backs the tree
  * @param comparatorFunction pointer to a comparator function (greater, smaller) for min or max heap
  */
-Heap::Heap(int heapArraySize, bool (*comparatorFunction)(float, float)) : comparator(comparatorFunction) {
+Heap::Heap(int heapArraySize, bool (*comparatorFunction)(int, int)) : comparator(comparatorFunction) {
     heapCurrentIndex = NOT_DEFINED;
     maxHeapSize = heapArraySize;
-    heapArray = new float[heapArraySize];
-    for (int i = 0; i < heapArraySize; i++) {
-        heapArray[i] = FLOAT_MIN;
-    }
+    heapArray = new int[heapArraySize];
 }
 
 /**
@@ -59,7 +64,7 @@ Heap::Heap(int heapArraySize, bool (*comparatorFunction)(float, float)) : compar
  *
  * @param comparatorFunction pointer to a comparator function (greater, smaller) for min or max heap
  */
-Heap::Heap(bool (*comparatorFunction)(float, float)) : Heap(DEFAULT_MAX_HEAP_SIZE, comparatorFunction) {
+Heap::Heap(bool (*comparatorFunction)(int, int)) : Heap(DEFAULT_MAX_HEAP_SIZE, comparatorFunction) {
 }
 
 /**
@@ -93,7 +98,7 @@ bool Heap::add(int key) {
  * Check for lazily deleted root and poll (remove) recursively
  */
 void Heap::checkDeletedRoot() {
-    if(heapArray[0] <= FLOAT_MIN) { // ToDo consider min/max
+    if(heapArray[0] <= INT_MIN) { // ToDo consider min/max
         poll();
         checkDeletedRoot();
     }
@@ -101,12 +106,12 @@ void Heap::checkDeletedRoot() {
 
 /**
  * Get = retrieve the root of the tree = element with highest "priority" = lowest or highest value
- * If there is no root element FLOAT_MIN is returned
+ * If there is no root element INT_MIN is returned
  *
  * @return the top / root element: the lowest value for min heap, the largest value for max heap
  */
-float Heap::peek() {
-    float peedkedElement = FLOAT_MIN;
+int Heap::peek() {
+    int peedkedElement = INT_MIN;
     if(heapCurrentIndex >= 0 ) {
         peedkedElement = heapArray[0];
     }
@@ -115,12 +120,12 @@ float Heap::peek() {
 
 /**
  * Take the root of the tree: retrieve and removes the element
- * If there is no root element FLOAT_MIN is returned
+ * If there is no root element INT_MIN is returned
  *
  * @return the top / root element: the lowest value for min heap, the largest value for max heap
  */
-float Heap::poll() {
-    float polledElement = FLOAT_MIN;
+int Heap::poll() {
+    int polledElement = INT_MIN;
     if(heapCurrentIndex != NOT_DEFINED) {
         polledElement = heapArray[0];
         swap(heapArray[0], heapArray[heapCurrentIndex]);
@@ -174,7 +179,7 @@ void Heap::heapify(int index) {
  * @param newElement to be used for the update
  * @return true (updated) or false (not found)
  */
-bool Heap::findAndUpdateElement(float oldElement, float newElement) {
+bool Heap::findAndUpdateElement(int oldElement, int newElement) {
     int indexOldElement =  find(oldElement);
     if (indexOldElement != NOT_DEFINED) {
         heapArray[indexOldElement] = newElement;
@@ -190,7 +195,7 @@ bool Heap::findAndUpdateElement(float oldElement, float newElement) {
  * @param element to be deleted
  * @return true (deleted) or false (not found)
  */
-bool Heap::deleteLazy(float element) {
+bool Heap::deleteLazy(int element) {
     if (element == peek()) {
         poll();
         return true;
@@ -201,7 +206,7 @@ bool Heap::deleteLazy(float element) {
             // ToDo test this
             heapArray[indexElementToBeDeleted] = heapArray[lastInsertedIndex];
             heapify(parent(lastInsertedIndex));
-            heapArray[lastInsertedIndex] = FLOAT_MIN; // ToDo consider min/max
+            heapArray[lastInsertedIndex] = INT_MIN; // ToDo consider min/max
             lastInsertedIndex = NOT_DEFINED;
             return true;
         }
@@ -213,9 +218,7 @@ bool Heap::deleteLazy(float element) {
  * Resets the heap without freeing the memory
  */
 void Heap::reset() {
-    heapCurrentIndex  = NOT_DEFINED;
-    lastInsertedIndex = NOT_DEFINED;
-    while(size() > 0) poll();
+    heapCurrentIndex = NOT_DEFINED;
 }
 
 
@@ -239,7 +242,7 @@ char* Heap::toString() {
  * @param element to be found in the heap
  * @return index of the element in the heap array
  */
-int Heap::find(float element) {
+int Heap::find(int element) {
     for (int i = 0; i <= heapCurrentIndex; i++) {
         if (heapArray[i] == element) return i;
     }

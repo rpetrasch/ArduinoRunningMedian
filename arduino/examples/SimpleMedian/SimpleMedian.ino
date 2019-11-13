@@ -45,6 +45,9 @@ void setup() {
   int values[] = {5, 15, 1, 3, 2, 8, 7, 1000, 9, 10, 6, 11, 4, -88, 2};
   int size = ARRAY_SIZE(values);
   printMedian(values, size);
+  Serial.println(F("Reset the object and add elements again"));
+  runningMedian.reset();
+  printMedian(values, size);
 }
 
 /**

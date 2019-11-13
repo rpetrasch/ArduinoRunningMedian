@@ -29,7 +29,7 @@
  * @param b second parameter
  * @return true (a>=b) or false (a<b)
  */
-bool greaterOrEqual(int a, int b);
+bool greaterOrEqual(float a, float b);
 
 /**
  * Comparator for "less than or equal to"
@@ -39,7 +39,7 @@ bool greaterOrEqual(int a, int b);
  * @param b second parameter
  * @return true (a<=b) or false (a>b)
  */
-bool lessOrEqual(int a, int b);
+bool lessOrEqual(float a, float b);
 
 /**
  * Calculation of the mean (average) for 2 values
@@ -49,7 +49,7 @@ bool lessOrEqual(int a, int b);
  * @param b first param
  * @return mean value of a and b
  */
-float mean(int a, int b);
+float mean(float a, float b);
 
 /** Generalized signum function
  * used for comparision of the the sizes of min and max heap
@@ -69,6 +69,6 @@ int signum(int a, int b);
  * @param a first param will get the value of b
  * @param b second param will get the value of a
  */
-void swap(int &a, int &b);
+void swap(float &a, float &b);
 
 #endif //RUNNINGMEDIAN_HEAPUTILS_H

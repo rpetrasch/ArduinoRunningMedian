@@ -33,6 +33,7 @@
 #include "RunningMedian.h"
 #include "HeapUtils.h"
 #include "Heap.h"
+#include "StringUtils.h"
 
 /**
  * Constructor
@@ -47,6 +48,7 @@ RunningMedian::RunningMedian(int array_size) :
 
 /**
   * Destructor
+  * ToDo implement
   */
 RunningMedian::~RunningMedian() {
 //    delete &minHeap;
@@ -126,7 +128,7 @@ float RunningMedian::getMedian() {
  * @param newElement new element to be added
  * @return true = done, false = failure
  */
-bool deleteAddBalance(Heap &heapDelete, Heap &heapAdd, int oldElement, int newElement) {
+bool deleteAddBalance(Heap &heapDelete, Heap &heapAdd, float oldElement, float newElement) {
     bool done = true;
     heapDelete.deleteLazy(oldElement); // lazily delete the old element
     heapAdd.add(newElement); // add new element to the heap
@@ -152,7 +154,7 @@ bool deleteAddBalance(Heap &heapDelete, Heap &heapAdd, int oldElement, int newEl
  * @param element that is to be removed
  * @return true (removed) or false (element not found)
  */
-bool RunningMedian::updateElement(int oldElement, int newElement) {
+bool RunningMedian::updateElement(int oldElement, float newElement) {
     bool updated = true;
     if (median > FLOAT_MIN) {
         if (oldElement < median) { // old element -> left (max) heap
@@ -173,4 +175,30 @@ bool RunningMedian::updateElement(int oldElement, int newElement) {
         // ToDo
     }
     return updated;
+}
+
+/**
+  * Resets the heaps and median without freeing the memory
+  */
+void RunningMedian::reset() {
+    minHeap.reset();
+    maxHeap.reset();
+    median = FLOAT_MIN;
+}
+
+/**
+ * Converts the heaps and the median to a string
+ * ToDo remove the casts
+ *
+ * @return heaps and median as a string
+ */
+char* RunningMedian::toString() {
+    char* result;
+    char buffer[30];
+    result = stringConcat((char*)"Max Heap: ", getMaxHeap()->toString());
+    result = stringConcat(result, (char*)"\nMin Heap: ");
+    result = stringConcat(result, getMinHeap()->toString());
+    result = stringConcat(result, (char*)"\nMedian: ");
+    stringConcat(result, stringFormat(buffer, (const char*) "%d", median)); // std::to_string(median);
+    return result;
 }

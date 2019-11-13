@@ -48,7 +48,7 @@
 #define FLOAT_MAX  (3.40282e38f)
 #define FLOAT_MIN (-3.40282e38f)
 
-#define NOT_DEFINED (-1)
+#define NOT_DEFINED -1
 
 class Heap {
 
@@ -60,7 +60,7 @@ public:
      * @param heapArraySize size of the array that backs the tree
      * @param comparatorFunction pointer to a comparator function (greater, smaller) for min or max heap
      */
-    Heap(int heapArraySize, bool (*comparatorFunction)(float, float));
+    Heap(int heapArraySize, bool (*comparatorFunction)(int, int));
 
     /**
      * Constructor
@@ -68,7 +68,7 @@ public:
      *
      * @param comparatorFunction pointer to a comparator function (greater, smaller) for min or max heap
      */
-    explicit Heap(bool (*comparatorFunction)(float, float));
+    explicit Heap(bool (*comparatorFunction)(int, int));
 
     /**
      * Destructor
@@ -85,19 +85,19 @@ public:
 
     /**
      * Get = retrieve the root of the tree = element with highest "priority" = lowest or highest value
-     * If there is no root element FLOAT_MIN is returned
+     * If there is no root element INT_MIN is returned
      *
      * @return the top / root element: the lowest value for min heap, the largest value for max heap
      */
-    float peek();
+    int peek();
 
     /**
      * Take the root of the tree: retrieve and removes the element
-     * If there is no root element FLOAT_MIN is returned
+     * If there is no root element INT_MIN is returned
      *
      * @return the top / root element: the lowest value for min heap, the largest value for max heap
      */
-    float poll();
+    int poll();
 
     /**
      * Returns the number of elements in the help
@@ -113,7 +113,7 @@ public:
      * @param newElement to be used for the update
      * @return true (updated) or false (not found)
      */
-    bool findAndUpdateElement(float oldElement, float newElement);
+    bool findAndUpdateElement(int oldElement, int newElement);
 
     /**
      * Delete an element by its key / value (lazy delete)
@@ -121,7 +121,7 @@ public:
      * @param element to be deleted
      * @return true (deleted) or false (not found)
      */
-    bool deleteLazy(float element);
+    bool deleteLazy(int element);
 
     /**
      * Resets the heap without freeing the memory
@@ -134,8 +134,8 @@ public:
       *
       * @return array / current index
       */
-    float * getHeapArray() { return heapArray;}
-    float getHeapCurrentIndex() { return heapCurrentIndex;}
+    int * getHeapArray() { return heapArray;}
+    int getHeapCurrentIndex() { return heapCurrentIndex;}
 
     /**
      * Converts the heap array to a string
@@ -146,11 +146,11 @@ public:
 
 protected:
     // Array that backs the heap
-    // Contains the keys = objects/elements of the tree (in this case: float values)
-    float *heapArray;
+    // Contains the keys = objects/elements of the tree (in this case: int values)
+    int *heapArray;
     // Comparator: see HeapUtils (greaterOrEqual, lessOrEqual)
     // Used for min and max heap
-    bool  (*comparator)(float a, float b);
+    bool  (*comparator)(int a, int b);
     // current heap array index starts with 0,
     // i.e. heapCurrentIndex + 1 must always less than maxHeapSize
     int heapCurrentIndex;
@@ -182,7 +182,7 @@ protected:
      * @param element to be found in the heap
      * @return index of the element in the heap array
      */
-    int find(float element);
+    int find(int element);
 
     /**
      * Check for lazily deleted root and poll (remove) recursively

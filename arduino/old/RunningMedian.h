@@ -74,7 +74,7 @@ public:
      * @param element that is to be removed
      * @return true (removed) or false (element not found)
      */
-    bool updateElement(int oldElement, float newElement);
+    bool updateElement(int oldElement, int newElement);
 
     /**
      * Getter methods for test purposes only. Do not use in order to change the

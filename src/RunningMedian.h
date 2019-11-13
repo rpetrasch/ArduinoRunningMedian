@@ -31,6 +31,9 @@
 #ifndef RUNNINGMEDIAN_H
 #define RUNNINGMEDIAN_H
 
+// #include <string> // Arduino does not support string
+#include <string.h>
+#include <stdlib.h>
 #include "Heap.h"
 
 class RunningMedian {
@@ -71,7 +74,7 @@ public:
      * @param element that is to be removed
      * @return true (removed) or false (element not found)
      */
-    bool updateElement(int oldElement, int newElement);
+    bool updateElement(int oldElement, float newElement);
 
     /**
      * Getter methods for test purposes only. Do not use in order to change the
@@ -81,6 +84,18 @@ public:
      */
     Heap * getMaxHeap() { return &maxHeap; }
     Heap * getMinHeap() { return &minHeap; }
+
+    /**
+      * Converts the heaps and the median to a string
+      * @return heaps and median as a string
+      */
+    // std::string toString(); // Arduino does not support string
+    char* toString();
+
+    /**
+      * Resets the heaps and median without freeing the memory
+      */
+    void reset();
 
 private:
     Heap maxHeap; // left (max) heap

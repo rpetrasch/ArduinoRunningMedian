@@ -28,7 +28,7 @@
  * @param b second parameter
  * @return true (a>=b) or false (a<b)
  */
-bool greaterOrEqual(float a, float b) {
+bool greaterOrEqual(int a, int b) {
     return a >= b;
 }
 
@@ -40,7 +40,7 @@ bool greaterOrEqual(float a, float b) {
  * @param b second parameter
  * @return true (a<=b) or false (a>b)
  */
-bool lessOrEqual(float a, float b) {
+bool lessOrEqual(int a, int b) {
     return a <= b;
 }
 
@@ -52,7 +52,7 @@ bool lessOrEqual(float a, float b) {
  * @param b first param
  * @return mean value of a and b
  */
-float mean(float a, float b) {
+float mean(int a, int b) {
     return ((float)a + (float)b) / 2;
 }
 
@@ -78,8 +78,8 @@ int signum(int left, int right) {
  * @param a first param will get the value of b
  * @param b second param will get the value of a
  */
-void swap(float &a, float &b){
-    float tmp = a;
+void swap(int &a, int &b){
+    int tmp = a;
     a = b;
     b = tmp;
 }
