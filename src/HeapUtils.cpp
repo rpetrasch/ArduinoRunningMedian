@@ -84,4 +84,47 @@ void swap(float &a, float &b){
     b = tmp;
 }
 
+/**
+ * Get the index of the left child given the parent index
+ *
+ * @param parentIndex index of the parent element
+ * @return index of the left child
+ **/
+int leftChildIndex(int parentIndex) {
+    return 2 * parentIndex + 1;
+}
 
+/**
+ * Get the index of the left child given the parent index
+ *
+ * @param parentIndex  index of the parent element
+ * @return index of the right child
+**/
+int rightChildIndex(int parentIndex) {
+    return 2 * parentIndex + 2;
+}
+
+
+
+/**
+ * Get the parent (index) of the element with the given index
+ *
+ * @param index of the element
+ * @return parent (index) of the element
+ */
+int parentIndex(int index) {
+    if( index <= 0 ) {
+        return NOT_DEFINED;
+    }
+    return (index - 1)/2;
+}
+
+/**
+ * Checks whether the element has a parent
+ *
+ * @param index of the element to checked for a parent
+ * @return true  = has parent
+ **/
+bool hasParent(int index) {
+    return parentIndex(index) >= 0;
+}

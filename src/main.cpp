@@ -32,10 +32,10 @@ using namespace std;
  * @param heap heap objects
  * @param name of the heap
  */
-void printHeapArray(Heap *heap, const string& name) {
-    float * array = heap->getHeapArray();
+void printHeapArray(Heap *heap, const string &name) {
+    float *array = heap->getHeapArray();
     cout << name;
-    for (int i=0; i <= heap->getHeapCurrentIndex(); i++) {
+    for (int i = 0; i <= heap->getHeapCurrentIndex(); i++) {
         float key = array[i];
         cout << " " << key;
     }
@@ -51,7 +51,7 @@ void printHeapArray(Heap *heap, const string& name) {
  */
 void printHeapPoll(Heap *heap, const string name) {
     cout << name;
-    while(true) {
+    while (true) {
         float key = heap->poll();
         if (key <= FLOAT_MIN) break;
         cout << " " << key;
@@ -84,7 +84,7 @@ void printSingleHeapMedian(int value, float median, RunningMedian &runningMedian
  */
 void printAllHeapMedian(float *values, float size, RunningMedian &runningMedian) {
     float median = 0;
-    for(int i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         median = runningMedian.getMedian(values[i]);
         printSingleHeapMedian(values[i], median, runningMedian, i);
         if (median <= FLOAT_MIN) {
@@ -95,12 +95,69 @@ void printAllHeapMedian(float *values, float size, RunningMedian &runningMedian)
     }
 }
 
+
 /**
  * Main test program
  * Contains 4 test cases for using the running median / sliding median
  */
-int main()
-{
+int main() {
+    if (false) {
+        Heap maxHeap(10, &greaterOrEqual);
+        Heap minHeap(10, &lessOrEqual);
+
+        cout << "---------------------------------------------------------------" << endl;
+        cout << "Test 0: heap test" << endl;
+        maxHeap.add(1);
+        maxHeap.add(1);
+        maxHeap.add(2);
+        maxHeap.add(1);
+        maxHeap.add(3);
+        maxHeap.add(1);
+        maxHeap.add(2);
+        maxHeap.add(1);
+
+        cout << maxHeap.poll() << endl;
+        cout << maxHeap.poll() << endl;
+        cout << maxHeap.poll() << endl;
+        cout << maxHeap.poll() << endl;
+        cout << maxHeap.poll() << endl;
+        cout << maxHeap.poll() << endl;
+        cout << maxHeap.poll() << endl;
+        cout << maxHeap.poll() << endl;
+        cout << maxHeap.poll() << endl;
+
+
+        minHeap.add(1);
+        minHeap.add(1);
+        minHeap.add(2);
+        minHeap.add(1);
+        minHeap.add(3);
+        minHeap.add(1);
+        minHeap.add(2);
+        minHeap.add(1);
+
+        cout << minHeap.poll() << endl;
+        cout << minHeap.poll() << endl;
+        cout << minHeap.poll() << endl;
+        cout << minHeap.poll() << endl;
+        cout << minHeap.poll() << endl;
+        cout << minHeap.poll() << endl;
+        cout << minHeap.poll() << endl;
+        cout << minHeap.poll() << endl;
+        cout << minHeap.poll() << endl;
+
+    }
+    {
+        Heap minHeap(100, &lessOrEqual);
+        minHeap.add(167 ); minHeap.add(167 ); minHeap.add(36 ); minHeap.add(26 ); minHeap.add(33 ); minHeap.add(30 );
+        minHeap.add(30 ); minHeap.add(25 ); minHeap.add(24 ); minHeap.add(28 ); minHeap.add(30 ); minHeap.add(27 );
+        minHeap.add(28 ); minHeap.add(26 ); minHeap.add(26 ); minHeap.add(25 ); minHeap.add(25 );
+        minHeap.add(23);
+        printHeapArray(&minHeap, "heap: ");
+        printHeapPoll(&minHeap, "heap: ");;
+
+    }
+
     if (true) {
         cout << "---------------------------------------------------------------" << endl;
         cout << "Test 1: heap size 2 / 6 elements -> heap overflow" << endl;
@@ -147,14 +204,14 @@ int main()
         if (updated) {
             float median = runningMedian.getMedian();
             cout << "---------------------------------------" << endl;
-            cout << "Element updated: " << "1 -> 2" << "\tMedian: " << median  << endl;
+            cout << "Element updated: " << "1 -> 2" << "\tMedian: " << median << endl;
             printSingleHeapMedian(2, median, runningMedian, 1);
         }
         updated = runningMedian.updateElement(4, 5);
         if (updated) {
             float median = runningMedian.getMedian();
             cout << "---------------------------------------" << endl;
-            cout << "Element updated: " << "4 -> 5" << "\tMedian: " << median  << endl;
+            cout << "Element updated: " << "4 -> 5" << "\tMedian: " << median << endl;
             printSingleHeapMedian(5, median, runningMedian, 2);
         }
         cout << "---" << endl;
@@ -182,19 +239,19 @@ int main()
     if (true) {
         cout << "Test 5: Arduino Data" << endl;
         float values[] = {59, 59, 58, 59, 60, 59, 60, 60, 167, 168, 169, 168, 168, 62, 61, 168, 62, 167, 168, 168, 168,
-                        60, 59, 61, 61, 60, 57, 59, 58, 58, 58, 57, 58, 58, 58, 57, 56, 54, 55, 56, 54, 52};
+                          60, 59, 61, 61, 60, 57, 59, 58, 58, 58, 57, 58, 58, 58, 57, 56, 54, 55, 56, 54, 52};
         float size = ARRAY_SIZE(values);
         RunningMedian runningMedian(30);
         printAllHeapMedian(values, size, runningMedian);
         cout << "*** Resetting the running median" << endl;
         runningMedian.reset();
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             float median = runningMedian.getMedian(values[i]);
             cout << median << ", ";
         }
         cout << endl;
         runningMedian.reset();
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             float median = runningMedian.getMedian(values[i]);
             cout << median << ", ";
         }
@@ -202,14 +259,13 @@ int main()
     }
     if (true) {
         cout << "Test 6: Static heap size" << endl;
-        float values[] = {59, 59, 58, 59, 60, 59, 60, 60, 167, 168, 169, 168, 168, 62, 61, 168, 62, 167, 168, 168, 168,
-                        60, 59, 61, 61, 60, 57, 59, 58, 58, 58, 57, 58, 58, 58, 57, 56, 54, 55, 56, 54, 52};
+        float values[] = {168, 167, 167, 167, 168, 167, 167, 168, 167, 167, 167, 168, 168, 168, 168, 167, 167, 168, 36, 33, 30, 30, 30, 27, 168, 168, 28, 26, 28, 26, 26, 25, 25, 25, 24, 23, 25, 27, 23, 23, 23, 24, 168, 167, 167, 167, 167, 168};
         float size = ARRAY_SIZE(values);
         RunningMedian runningMedian(size);
         printAllHeapMedian(values, size, runningMedian);
         cout << "*** Resetting the running median" << endl;
         runningMedian.reset();
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             float median = runningMedian.getMedian(values[i]);
             cout << median << ", ";
         }

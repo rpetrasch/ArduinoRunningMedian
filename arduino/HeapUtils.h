@@ -21,6 +21,8 @@
 #ifndef RUNNINGMEDIAN_HEAPUTILS_H
 #define RUNNINGMEDIAN_HEAPUTILS_H
 
+#define NOT_DEFINED (-1)
+
 /**
  * Comparator for "greater than or equal to"
  * first parameter a is compared with second parameter b: a >= b?
@@ -70,5 +72,38 @@ int signum(int a, int b);
  * @param b second param will get the value of a
  */
 void swap(float &a, float &b);
+
+/**
+ * Get the index of the left child given the parent index
+ *
+ * @param parentIndex index of the parent element
+ * @return index of the left child
+ **/
+int leftChildIndex(int parentIndex);
+
+
+/**
+ * Get the index of the left child given the parent index
+ *
+ * @param parentIndex  index of the parent element
+ * @return index of the right child
+**/
+int rightChildIndex(int parentIndex);
+
+/**
+ * Get the parent index of the element with the index
+ *
+ * @param index of the element
+ * @return parent index of the element
+ */
+int parentIndex(int index);
+
+/**
+ * Checks whether the element has a parent
+ *
+ * @param index of the element to checked for a parent
+ * @return true  = has parent
+ **/
+bool hasParent(int index);
 
 #endif //RUNNINGMEDIAN_HEAPUTILS_H

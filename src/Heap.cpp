@@ -81,10 +81,11 @@ bool Heap::add(int key) {
     bool inserted = false;
     if(heapCurrentIndex + 1 < maxHeapSize ) {
         heapCurrentIndex++;
-        inserted = true;
         heapArray[heapCurrentIndex] = key;
         lastInsertedIndex = heapCurrentIndex;
-        heapify(heapCurrentIndex);
+        heapifyUp(); // ToDo optimize with heapify(heapCurrentIndex);
+        heapifyDown();
+        inserted = true;
     }
     return inserted;
 }
@@ -106,11 +107,11 @@ void Heap::checkDeletedRoot() {
  * @return the top / root element: the lowest value for min heap, the largest value for max heap
  */
 float Heap::peek() {
-    float peedkedElement = FLOAT_MIN;
+    float peekedElement = FLOAT_MIN;
     if(heapCurrentIndex >= 0 ) {
-        peedkedElement = heapArray[0];
+        peekedElement = heapArray[0];
     }
-    return peedkedElement;
+    return peekedElement;
 }
 
 /**
@@ -124,7 +125,9 @@ float Heap::poll() {
     if(heapCurrentIndex != NOT_DEFINED) {
         polledElement = heapArray[0];
         swap(heapArray[0], heapArray[heapCurrentIndex]);
-        heapify(parent(heapCurrentIndex--)); // rebuild the tree and decrease size
+        // rebuild the tree and decrease size
+        heapifyDown(); // ToDo optimize with heapify(heapCurrentIndex - 1);
+        heapCurrentIndex--;
     }
     return polledElement;
 }
@@ -139,31 +142,64 @@ int Heap::size() {
 }
 
 /**
- * Get the parent (index) of the element with the given index
+ * Get the parent key (element value) of the element with the index
  *
  * @param index of the element
- * @return parent (index) of the element
+ * @return parent value of the element
  */
 int Heap::parent(int index) {
-    if( index <= 0 ) {
-        return NOT_DEFINED;
-    }
-    return (index - 1)/2;
+    return heapArray[parentIndex(index)];
 }
 
 /**
  * (Re-)Create the heap from the element with the index towards the root
  * = converting a binary tree into a heap (complete, and parent of a node is more "extreme"
  * than the node)
+ * ToDo Optimize
  *
  * @param index of the element
  */
 void Heap::heapify(int index) {
-    int parentIndex = parent(index);
+    int parentIdx = parentIndex(index);
     // comparision: max heap or min heap (depends on the comparator)
-    if( parentIndex >= 0 && comparator(heapArray[index], heapArray[parentIndex]) ) {
-        swap(heapArray[index], heapArray[parentIndex]);
-        heapify(parentIndex);
+    if (parentIdx >= 0 && comparator(heapArray[index], heapArray[parentIdx])) {
+        swap(heapArray[index], heapArray[parentIdx]);
+        heapify(parentIdx);
+    }
+}
+
+/**
+ * (Re-)Create the heap from the leaf element(s) towards the root
+ * = converting a binary tree into a heap (complete, and parent of a node is more "extreme"
+ * than the node)
+ *
+ * @param index of the element
+ */
+void Heap::heapifyUp() {
+    int index = heapCurrentIndex - 1;
+    while(hasParent(index) && comparator(heapArray[index], parent(index))) {
+        swap(heapArray[parentIndex(index)], heapArray[index]);
+        index = parentIndex(index);
+    }
+}
+
+/**
+ * (Re-)Create the heap starting from the root
+ */
+void Heap::heapifyDown() {
+    int index = 0;
+    while(hasLeftChild(index)) {
+        int smallerChildIndex = leftChildIndex(index);
+        if(hasRightChild(index) && comparator(rightChild(index), leftChild(index))) {
+            smallerChildIndex = rightChildIndex(index);
+        }
+        if(comparator(heapArray[index], heapArray[smallerChildIndex])) {
+            break;
+        }
+        else {
+            swap(heapArray[index], heapArray[smallerChildIndex]);
+        }
+        index = smallerChildIndex;
     }
 }
 
@@ -178,7 +214,8 @@ bool Heap::findAndUpdateElement(float oldElement, float newElement) {
     int indexOldElement =  find(oldElement);
     if (indexOldElement != NOT_DEFINED) {
         heapArray[indexOldElement] = newElement;
-        heapify(indexOldElement);
+        // heapify(indexOldElement);
+        heapifyDown();
         return true;
     }
     return false;
@@ -200,7 +237,8 @@ bool Heap::deleteLazy(float element) {
         if (lastInsertedIndex != NOT_DEFINED) {
             // ToDo test this
             heapArray[indexElementToBeDeleted] = heapArray[lastInsertedIndex];
-            heapify(parent(lastInsertedIndex));
+            // heapify(parentIndex(lastInsertedIndex));
+            heapifyDown();
             heapArray[lastInsertedIndex] = FLOAT_MIN; // ToDo consider min/max
             lastInsertedIndex = NOT_DEFINED;
             return true;
@@ -217,7 +255,6 @@ void Heap::reset() {
     lastInsertedIndex = NOT_DEFINED;
     while(size() > 0) poll();
 }
-
 
 /**
  * Converts the heap array to a string
@@ -246,4 +283,40 @@ int Heap::find(float element) {
     return NOT_DEFINED;
 }
 
+/**
+ * Retrieve the left child element
+ *
+ * @param index of the parent element
+ * @return ket (value) of left child.
+ **/
+int Heap::leftChild(int index) {
+    return heapArray[leftChildIndex(index)];
+}
 
+/**
+ * Retrieve the right child element
+ *
+ * @param index of the parent element
+ * @return ket (value) of right child.
+ **/
+int Heap::rightChild(int index) {
+    return heapArray[rightChildIndex(index)];
+}
+
+/** Check whether a left child exists
+ *
+  * @param index of the element to be checked
+  * @return true = left child, false = no left child
+   **/
+bool Heap::hasLeftChild(int index) {
+    return leftChildIndex(index) < heapCurrentIndex;
+}
+
+/** Check whether a right child exists
+ *
+ * @param index of the element to be checked
+ * @return true = right child, false = no right child
+ **/
+bool Heap::hasRightChild(int index) {
+    return rightChildIndex(index) < heapCurrentIndex;
+}

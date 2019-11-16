@@ -48,8 +48,6 @@
 #define FLOAT_MAX  (3.40282e38f)
 #define FLOAT_MIN (-3.40282e38f)
 
-#define NOT_DEFINED (-1)
-
 class Heap {
 
 public:
@@ -160,21 +158,36 @@ protected:
     int maxHeapSize;
 
     /**
-     * Get the parent (index) of the element with the index
+     * Get the parent key (element value) of the element with the index
      *
      * @param index of the element
-     * @return parent (index) of the element
+     * @return parent value of the element
      */
-    static int parent(int index);
+    int parent(int index);
 
     /**
      * (Re-)Create the heap from the element with the index towards the root
      * = converting a binary tree into a heap (complete, and parent of a node is more "extreme"
      * than the node)
+     * ToDo Optimize
      *
      * @param index of the element
      */
     void heapify(int index);
+
+    /**
+     * (Re-)Create the heap from the leaf element(s) towards the root
+     * = converting a binary tree into a heap (complete, and parent of a node is more "extreme"
+     * than the node)
+     *
+     * @param index of the element
+     */
+    void heapifyUp();
+
+    /**
+     * (Re-)Create the heap starting from the root
+     */
+    void heapifyDown();
 
     /**
      * Find an element by its key / value and return the index (in the heap array)
@@ -189,6 +202,35 @@ protected:
      */
     void checkDeletedRoot();
 
+    /**
+     * Retrieve the left child element
+    *
+    * @param index of the parent element
+    * @return ket (value) of left child.
+    **/
+    int leftChild(int index);
+
+    /**
+    * Retrieve the right child element
+    *
+    * @param index of the parent element
+    * @return ket (value) of right child.
+    **/
+    int rightChild(int index);
+
+    /** Check whether a left child exists
+     *
+     * @param index of the element to be checked
+     * @return true = left child, false = no left child
+     **/
+    bool hasLeftChild(int index);
+
+    /** Check whether a right child exists
+     *
+     * @param index of the element to be checked
+     * @return true = right child, false = no right child
+     **/
+    bool hasRightChild(int index);
 };
 
 #endif //RUNNINGMEDIAN_HEAP_H
