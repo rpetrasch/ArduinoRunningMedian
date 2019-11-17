@@ -28,6 +28,8 @@ RunningMedian runningMedian(100);
 
 // string for formatted output
 char outputString[100];
+float values[] = {5, 15, 1, 3, 2, 8, 7, 100, 9, 10, 6, 11, 4, -88, 2};
+int size = ARRAY_SIZE(values);
 
 /**
  * Setup
@@ -38,16 +40,11 @@ void setup() {
   // Initialize Serial port
   Serial.begin(19200);
   Serial.println();
-  Serial.println(F("--------------------------------"));
-  Serial.println(F("Running Median - Test"));
-  Serial.println(F("--------------------------------"));
-
-  int values[] = {5, 15, 1, 3, 2, 8, 7, 1000, 9, 10, 6, 11, 4, -88, 2};
-  int size = ARRAY_SIZE(values);
+  Serial.println("--------------------------------");
+  Serial.println("Running Median - Test");
+  Serial.println("--------------------------------");
   printMedian(values, size);
-  Serial.println(F("Reset the object and add elements again"));
-  runningMedian.reset();
-  printMedian(values, size);
+  
 }
 
 /**
@@ -55,18 +52,23 @@ void setup() {
  * nothing to see here
  */
 void loop() {
-
+//  Serial.println("Reset the object and add elements again");
+//  runningMedian.reset();
+//  printMedian(values, size);
+//  delay(1000);
 }
 
 /**
  * Sends the array elements with the median values to the serial channel
  */
-void printMedian(int values[], int size) {
-    int median = 0; // variable for effective median
+void printMedian(float values[], int size) {
+    float median = 0; // variable for effective median
     for(int i = 0; i < size; i++) {
         median = runningMedian.getMedian(values[i]);
-        sprintf(outputString, "Element: %4d \t Median: %4d", values[i], median);
-        Serial.println(outputString);
+        // sprintf(outputString, "Element: %f \t Median: %f", values[i], median);
+        // Serial.println(outputString);
+        Serial.print(values[i]);Serial.print(" \t ");Serial.print(median);
+        Serial.println();
     }
     delete &runningMedian;
 }

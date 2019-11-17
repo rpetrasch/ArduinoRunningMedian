@@ -36,40 +36,35 @@ const int serialBaudRate = 19200;
 const int sensorShortLowPulseDelay = 1;
 const int sensorHighPulseDelay = 10;
 // long  duration = 0;
-float distance = 0, distanceDelta = 0, distanceDeltaOld = 0, distanceSmooth = 0, distanceSmoothMedian = 0, distanceSkip = 0, distanceOld  = 0, distancePreserved = 0, relDiff = 0;
+float distance = 0, distanceDelta = 0, distanceDeltaOld = 0, distanceSmooth = 0, distanceSmoothMedian = 0, distanceOld  = 0;
+
+// Smooth with delta variables ----------------------------------------------
+float simpleDeltaThreshold = 30.0;
 
 // Smooth with average variables ----------------------------------------------
-const int numReadings = 50;     // size of the ring buffer
+const int numReadings = 60;     // size of the ring buffer
 int readings[numReadings];      // readings from sensor (distance): ring buffer
 int readIndex         = 0;      // index of the current reading
 float total           = 0;      // running total (sum of sensor distance values)
 float average         = 0;      // average of sensor distance
 
-// Skip outliers with simple delta --------------------------------------------
-const float simpleDeltaThreshold = 40; // 40 cm delta
-// Skip outliers with average variable ----------------------------------------
-const float averageTheshold = 0.15; // threshold for skip the distance, e.g. 10%
-// Skip outliers above rel. diff. threshold -----------------------------------
-const float relDifferenceThreshold = 1.0;
-// Median
+// Smooth with Median variables ------------------------------------------------
 RunningMedian runningMedian(numReadings);
+RunningMedian runningMedianUpdate(numReadings);
 int counterRunningMedian = 0;
+int ringBufferIndex = 0;
+float ringBuffer[numReadings]; // ring buffer for median update
 
-// Relative Difference variables ----------------------------------------------
-const bool doSmoothWithSimpleDelta = false;
-const bool doSmoothWithAverage   = true;
-const bool doSmoothWithMedian    = true;
-const bool doSmoothWithMAD       = false;
-const bool doSkipWithAverage     = false;
-const bool doRelDiff             = false;
-const bool showRelDiff           = false;
-const bool showRelDiffDelta      = false;
+// Actions ----------------------------------------------
+const bool doSmoothWithSimpleDelta  = true;
+const bool doSmoothWithAverage      = true;
+const bool doSmoothWithMedian       = true;
+const bool doSmoothWithMedianUpdate = true;
 // Used to draw the values below/above each other
-const int relDistanceDeltaDisplayOffset   =  -5;
-const int relDistanceSmoothDisplayOffset  = -10; 
-const int relDistanceSkipDisplayOffset    = -15;
-const int relDistanceRelDiffDisplayOffset = -20;
-const int relDistanceSmoothMedianDisplayOffset = -20;
+const int deltaDisplayOffset   =  -5;
+const int smoothDisplayOffset  = -10; 
+const int smoothMedianDisplayOffset = -15;
+const int smoothMedianUpdateDisplayOffset = -20;
 
 /**
  * Setup function 
@@ -80,17 +75,14 @@ void setup() {
   // Trigger is sent to the sensor and echo is received by the sensor
   pinMode(triggerPin, OUTPUT);
   pinMode(echoPin, INPUT);
-  // Initialize the Ring buffer for relative difference
+  // Initialize the Ring buffer
   for (int thisReading = 0; thisReading < numReadings; thisReading++) {
-     // readings[thisReading] = 0;
      distance = getDistance();
      updateAverage();
+     float median = runningMedianUpdate.getMedian(distance);
+     ringBuffer[ringBufferIndex] = distance;
+     ringBufferIndex++;
   }
-
-  // Intialize old distance value for rel. difference
-  // duration = readSensor(); 
-  // convert duration (time) into a distance
-  // distance = microsecondsToCentimeters(duration);
   distance = getDistance();
   distanceOld = distance;
   distanceDeltaOld = distance;
@@ -115,43 +107,40 @@ void loop() {
 
   if (doSmoothWithSimpleDelta ) {
     distanceDelta = smoothWithSimpleDelta();
-    printValue("DistSimpleDelta:", distanceDelta + relDistanceDeltaDisplayOffset);
+    printValue("DistSimpleDelta:", distanceDelta + deltaDisplayOffset);
   }
   if (doSmoothWithAverage) {
     distanceSmooth = smoothWithAverage();
-    printValue("DistSmooth:", distanceSmooth + relDistanceSmoothDisplayOffset);
+    printValue("DistSmooth:", distanceSmooth + smoothDisplayOffset);
   }
   if (doSmoothWithMedian) {
     if (counterRunningMedian+1 >= numReadings){
-       printValue("Reset:", 100);
+       printValue("Reset:", 50);
        runningMedian.reset();
        counterRunningMedian = 0;
     } else {
-       printValue("Reset:", 10);
+       printValue("Reset:", 0);
     }
     distanceSmoothMedian = runningMedian.getMedian(distance);
-    printValue("DistSmoothMedian:", distanceSmoothMedian + relDistanceSmoothMedianDisplayOffset);
+    printValue("DistSmoothMedian:", distanceSmoothMedian + smoothMedianDisplayOffset);
     counterRunningMedian++;
   }
-  if (doSkipWithAverage) {
-    distanceSkip = skipWithAverage();
-    printValue("DistSkip:", distanceSkip + relDistanceSkipDisplayOffset);
-    
-  }
-  if (doRelDiff) {
-    relDiff = calcRelativeDifference();
-    if (relDiff > 10.0) relDiff = 10.0; // Just limit the values for better plot (>1000%)
-    if (showRelDiff) {
-      printValue("RelDiff:", relDiff);
+  if (doSmoothWithMedianUpdate) {
+    if (ringBufferIndex+1 >= numReadings) {
+       ringBufferIndex = 0;
     }
-    if (relDiff <= relDifferenceThreshold) {
-      printValue("RelDiffCorr:", 0);
+    bool updated = runningMedianUpdate.updateElement(ringBuffer[ringBufferIndex], distance);
+    if (updated) {
+      distanceSmoothMedian = runningMedian.getMedian();
+      printValue("DistSmoothMedianUpdate:", distanceSmoothMedian + smoothMedianUpdateDisplayOffset);
     } else {
-      printValue("RelDiffCorr:", 40);
-      distancePreserved = distance;
+      // ToDo error handling
+      printValue("DistSmoothMedianUpdate:", 0);
     }
-    printValue("Distance(relDiff):", distancePreserved + relDistanceRelDiffDisplayOffset);
+    ringBuffer[ringBufferIndex] = distance;
+    ringBufferIndex++;
   }
+
   Serial.println();
   delay(delayMS);
 }
@@ -180,22 +169,6 @@ long smoothWithAverage() {
 }
 
 /**
- * Smoothing with skipping logic
- * The average (mean) is used, relative (percentage) delta is calculated
- **/
-long skipWithAverage() {
-  float relativeChange = abs(distance - average)/average;
-  printValue("DistSkip(relChange):", relativeChange);
-  if (relativeChange > averageTheshold && total != 0) { 
-    printValue("DistSkip(bool):", 50);
-    return average;
-  }
-  printValue("DistSkip(bool):", 0);
-  updateAverage();
-  return average;
-}
-
-/**
  * Calculation of the mean (average)
  */
 void updateAverage() {
@@ -209,32 +182,6 @@ void updateAverage() {
   }
   average = total / numReadings;
 }
-
-/**
- * Calculate the relative difference
- * https://en.wikipedia.org/wiki/Relative_change_and_difference
- */ 
-float calcRelativeDifference() {
-  float deltaAbsolute = abs(distanceOld-distance);
-  // long scale = max(abs(distanceOld), abs(distance));
-  // float scale = min(abs(distanceOld), abs(distance));
-  float scale = abs(distanceOld);
-  if (showRelDiffDelta) {
-    printValue("RelDiffDelta:",deltaAbsolute); printValue("Scale:",scale);
-  }
-  float relativeDifference = deltaAbsolute/scale;
-/* scale the absolute difference
-  max(|x|, |y|),
-  max(x, y),
-  min(|x|, |y|),
-  min (x, y),
-  (x + y)/2
-  (|x| + |y|)/2.
-*/
-  distanceOld = distance;
-  return relativeDifference;
-}
-
 
 /**
  * Simple print function for Serial.print with or without label

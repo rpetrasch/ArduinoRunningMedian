@@ -46,6 +46,11 @@ For more infos visit [catch2 website](https://github.com/catchorg/Catch2)
 
 Here we will describe the Arduino scenarios in detail.
 
+## Known Bugs
+
+- toString() is not working properly
+- updateElement and getMedian() lead to overflow
+
 ## Built With
 
 * [CLion](https://www.jetbrains.com/clion/) - IntelliJ C and C++ IDE

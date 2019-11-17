@@ -84,7 +84,7 @@ bool Heap::add(int key) {
         heapArray[heapCurrentIndex] = key;
         lastInsertedIndex = heapCurrentIndex;
         heapifyUp(); // ToDo optimize with heapify(heapCurrentIndex);
-        heapifyDown();
+        // heapifyDown();
         inserted = true;
     }
     return inserted;
@@ -176,7 +176,7 @@ void Heap::heapify(int index) {
  * @param index of the element
  */
 void Heap::heapifyUp() {
-    int index = heapCurrentIndex - 1;
+    int index = heapCurrentIndex;
     while(hasParent(index) && comparator(heapArray[index], parent(index))) {
         swap(heapArray[parentIndex(index)], heapArray[index]);
         index = parentIndex(index);

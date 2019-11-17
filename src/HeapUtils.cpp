@@ -53,7 +53,7 @@ bool lessOrEqual(float a, float b) {
  * @return mean value of a and b
  */
 float mean(float a, float b) {
-    return ((float)a + (float)b) / 2;
+    return (a + b) / 2;
 }
 
 /** Generalized signum function

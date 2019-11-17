@@ -1,0 +1,17 @@
+{
+    "name": "ArduinoRunningMedian",
+    "keywords": "Arduino, running median, sensor value, outlier, ultra sound",
+    "description": "Implementation of a min. heap data structure for running median.",
+    "authors":
+    {
+        "name": "Roland Petrasch",
+        "url": "https://github.com/rpetrasch/ArduinoRunningMedian"
+    },
+    "version": "2.2",
+    "downloadUrl": "https://github.com/rpetrasch/ArduinoRunningMedian/raw/master/ArduinoRunningMedian.zip",
+    "export": {
+        "include": "RunningMedian"
+    },
+    "frameworks": "arduino",
+    "platforms": "atmelavr"
+}
